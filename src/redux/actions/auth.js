@@ -36,6 +36,7 @@ export const loginAction = (payload) => {
   };
 };
 export const loginSuccess = (payload) => {
+  console.log("payload", payload);
   return {
     type: LOGIN_SUCCESS,
     payload,

@@ -1,27 +1,29 @@
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { AuthRoute } from "./common/AuthRoute";
+import NotFound from "./common/NotFound";
+import { PrivateRoute } from "./common/PrivateRoute";
 import { LoginPage, RegisterPage } from "./containers/AuthPage";
 import HomePage from "./containers/HomePage";
+import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  const isLogin = useSelector(
-    (state) => state.authReducer.statusFlags.isLoginSuccess
-  );
-  console.log("isLogin", isLogin);
-
+  const userInfo = useSelector((state) => state.authReducer.userLogin);
+  console.log("userInfo", userInfo);
   return (
     <div>
       <Switch>
-        <Route path="/login">
+        <AuthRoute path="/login">
           <LoginPage />
-          {isLogin && <Redirect to="/" />}
-        </Route>
-        <Route path="/register">
+        </AuthRoute>
+        <AuthRoute path="/register">
           <RegisterPage />
-        </Route>
-        <Route path="/">
+        </AuthRoute>
+        <PrivateRoute path="/" exact>
           <HomePage />
+        </PrivateRoute>
+        <Route>
+          <NotFound />
         </Route>
       </Switch>
     </div>

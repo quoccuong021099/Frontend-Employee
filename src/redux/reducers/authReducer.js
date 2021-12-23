@@ -64,9 +64,9 @@ const authReducer = (state = initialState, action) =>
       }
       case LOGIN_SUCCESS: {
         draft.statusFlags.isLoading = false;
+        draft.userLogin = action.payload;
         draft.statusFlags.isLoginSuccess = true;
         draft.statusFlags.isLoginFailure = false;
-        draft.userLogin = action.payload.user;
         break;
       }
       case LOGIN_FAILED: {

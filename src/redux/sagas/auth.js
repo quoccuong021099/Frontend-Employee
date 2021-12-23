@@ -1,3 +1,4 @@
+import { push } from "connected-react-router";
 import _get from "lodash/get";
 import { call, put, takeLatest } from "redux-saga/effects";
 import axiosClient from "../../api/axiosClient";
@@ -29,8 +30,8 @@ function* registerSagaFunc({ payload }) {
   try {
     if (_get(response, "code") === 200) {
       localStorage.setItem("token", response.token);
-      console.log(" response.token", response.token);
-      yield put(loginSuccess(_get(response, "data")));
+      yield put(push("/"));
+      yield put(loginSuccess(payload));
     } else {
       yield put(registerFaiure(response.message));
     }
@@ -41,13 +42,12 @@ function* registerSagaFunc({ payload }) {
 
 // Login
 function* loginSagaFunc({ payload }) {
-  console.log("payload", payload);
   const response = yield call(fecthLogin, payload);
-  console.log("response", response);
   try {
     if (_get(response, "code") === 200) {
       localStorage.setItem("token", response.token);
-      yield put(loginSuccess(_get(response, "data")));
+      yield put(push("/"));
+      yield put(loginSuccess(payload));
     } else {
       yield put(loginFaiure(response.message));
     }
@@ -55,6 +55,7 @@ function* loginSagaFunc({ payload }) {
     yield put(loginFaiure({ err: error.message }));
   }
 }
+
 export default function* authSaga() {
   yield takeLatest(REGISTER, registerSagaFunc);
   yield takeLatest(LOGIN, loginSagaFunc);
